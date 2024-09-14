@@ -94,19 +94,37 @@ class ClientApp(QWidget):
         
         
 
-        if not telefone.isnumeric():
-            QMessageBox.warning(self,"erro","telefone aceita apenas numeros")
-            return client_name
-            
+        # if not telefone.isnumeric():
+        #     QMessageBox.warning(self,"erro","telefone aceita apenas numeros")
+        #     return client_name
+        def verificar(entrada, valores_permitidos):
+            entrada_set = set(entrada)
+            if entrada_set.issubset(valores_permitidos):
+                return True
+            else:
+                    return False
+        valores_permitidos = set("0123456789()-.")
+        
         if client_name and telefone and cpf and endereco and bairro and cidade and cep and obs:
             client = {
                 "name": client_name, "telefone": telefone, "cpf": cpf,
                 "endereco": endereco, "bairro": bairro, "cidade": cidade,
                 "cep": cep, "obs": obs
                 }
-            self.manager.add_client(client)
-            self.update_table()
-            self.clear_form()
+
+            entrada = telefone + cep + cpf
+            
+            if verificar(entrada,valores_permitidos):
+                
+                self.manager.add_client(client)
+                self.update_table()
+                self.clear_form()
+
+            else:
+                QMessageBox.warning(self,'erro','entradas invalidas(Tel,cep,cpf)')
+                return client_name
+
+            
         else:
             QMessageBox.warning(self, "Erro", "Todos os campos são obrigatórios")
 
@@ -134,6 +152,7 @@ class ClientApp(QWidget):
         else:
             QMessageBox.warning(self, "Erro", "Cliente não encontrado")
 
+    
     def update_client(self):
         client_name = self.name_input.text()
         telefone = self.telefone_input.text()
@@ -144,21 +163,31 @@ class ClientApp(QWidget):
         cep = self.cep_input.text()
         obs = self.obs_input.text()
 
-        if not telefone.isnumeric():
-            QMessageBox.warning(self,"erro","telefone aceita apenas numeros")
-            return client_name
-        
+        def verificar(entrada, valores_permitidos):
+            entrada_set = set(entrada)
+            if entrada_set.issubset(valores_permitidos):
+                return True
+            else:
+                    return False
+        valores_permitidos = set("0123456789()-.")
+
         if client_name and telefone and cpf and endereco and bairro and cidade and cep and obs:
             updated_client = {
                 "name": client_name, "telefone": telefone, "cpf": cpf,
                 "endereco": endereco, "bairro": bairro, "cidade": cidade,
                 "cep": cep, "obs": obs
                 }
-            if self.manager.update_client(client_name, updated_client):
-                self.update_table()
-                self.clear_form()
+            entrada = telefone + cep + cpf
+            if verificar(entrada, valores_permitidos):
+
+                if self.manager.update_client(client_name, updated_client):
+                    self.update_table()
+                    self.clear_form()
+                else:
+                    QMessageBox.warning(self, "Erro", "Cliente não encontrado")
             else:
-                QMessageBox.warning(self, "Erro", "Cliente não encontrado")
+                QMessageBox.warning(self,'erro','entradas invalidas(Tel,cep,cpf)')
+                return client_name
         else:
             QMessageBox.warning(self, "Erro", "Todos os campos são obrigatórios")
 
@@ -193,3 +222,6 @@ class ClientApp(QWidget):
         self.cidade_input.clear()
         self.cep_input.clear()
         self.obs_input.clear()
+
+    
+    
