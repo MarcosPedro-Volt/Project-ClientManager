@@ -25,6 +25,7 @@ class ClientApp(QWidget):
         self.telefone_input.setPlaceholderText("Telefone")
         self.cpf_input = QLineEdit(self)
         self.cpf_input.setPlaceholderText("CPF")
+        
         self.endereco_input = QLineEdit(self)
         self.endereco_input.setPlaceholderText("Endereço")
         self.bairro_input = QLineEdit(self)
@@ -90,6 +91,10 @@ class ClientApp(QWidget):
         cidade = self.cidade_input.text()
         cep = self.cep_input.text()
         obs = self.obs_input.text()
+        
+
+        if not 'telefone''cpf''cep'.isnumeric():
+            QMessageBox.warning(self,"erro","telefone,cpf e cep aceita apenas numeros")
 
         if client_name and telefone and cpf and endereco and bairro and cidade and cep and obs:
             client = {
@@ -137,6 +142,9 @@ class ClientApp(QWidget):
         cep = self.cep_input.text()
         obs = self.obs_input.text()
 
+        if not 'telefone''cpf''cep'.isnumeric():
+            QMessageBox.warning(self,"erro","telefone,cpf e cep aceita apenas numeros")
+        
         if client_name and telefone and cpf and endereco and bairro and cidade and cep and obs:
             updated_client = {
                 "name": client_name, "telefone": telefone, "cpf": cpf,
