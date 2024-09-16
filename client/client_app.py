@@ -71,6 +71,7 @@ class ClientApp(QWidget):
         self.client_table.setColumnCount(8)
         
         
+        
       
         self.client_table.setHorizontalHeaderLabels(
             ["Nome", "Telefone", "CPF", "Endereço", 
@@ -93,18 +94,6 @@ class ClientApp(QWidget):
         obs = self.obs_input.text()
         
         
-
-        # if not telefone.isnumeric():
-        #     QMessageBox.warning(self,"erro","telefone aceita apenas numeros")
-        #     return client_name
-        def verificar(entrada, valores_permitidos):
-            entrada_set = set(entrada)
-            if entrada_set.issubset(valores_permitidos):
-                return True
-            else:
-                    return False
-        valores_permitidos = set("0123456789()-.")
-        
         if client_name and telefone and cpf and endereco and bairro and cidade and cep and obs:
             client = {
                 "name": client_name, "telefone": telefone, "cpf": cpf,
@@ -113,15 +102,17 @@ class ClientApp(QWidget):
                 }
 
             entrada = telefone + cep + cpf
+            valores_permitidos = set("0123456789()-.")
+            verify = self.verificar(entrada, valores_permitidos)
             
-            if verificar(entrada,valores_permitidos):
+            if verify:
                 
                 self.manager.add_client(client)
                 self.update_table()
                 self.clear_form()
 
             else:
-                QMessageBox.warning(self,'erro','entradas invalidas(Tel,cep,cpf)')
+                QMessageBox.warning(self,'Erro','entradas invalidas(Tel,cep,cpf)')
                 return client_name
 
             
@@ -163,13 +154,7 @@ class ClientApp(QWidget):
         cep = self.cep_input.text()
         obs = self.obs_input.text()
 
-        def verificar(entrada, valores_permitidos):
-            entrada_set = set(entrada)
-            if entrada_set.issubset(valores_permitidos):
-                return True
-            else:
-                    return False
-        valores_permitidos = set("0123456789()-.")
+       
 
         if client_name and telefone and cpf and endereco and bairro and cidade and cep and obs:
             updated_client = {
@@ -177,8 +162,12 @@ class ClientApp(QWidget):
                 "endereco": endereco, "bairro": bairro, "cidade": cidade,
                 "cep": cep, "obs": obs
                 }
+            
             entrada = telefone + cep + cpf
-            if verificar(entrada, valores_permitidos):
+            valores_permitidos = set("0123456789()-.")
+            verify = self.verificar(entrada, valores_permitidos)
+            
+            if verify:
 
                 if self.manager.update_client(client_name, updated_client):
                     self.update_table()
@@ -209,9 +198,9 @@ class ClientApp(QWidget):
             self.client_table.setItem(row, 7, obs_item)
             
 
-            self.client_table.setColumnWidth(7,540)
-            self.client_table.setRowHeight(row,300)
-            # self.client_table.setcol
+            # self.client_table.setColumnWidth(7,540)
+            # self.client_table.setRowHeight(row,300)
+            
 
     def clear_form(self):
         self.name_input.clear()
@@ -224,4 +213,10 @@ class ClientApp(QWidget):
         self.obs_input.clear()
 
     
+    def verificar(self,entrada, valores_permitidos):
+        entrada_set = set(entrada)
+        if entrada_set.issubset(valores_permitidos):
+            return True
+        else:
+            return False
     
