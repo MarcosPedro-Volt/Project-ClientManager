@@ -1,14 +1,16 @@
 import json
 import os
 
+
 class ClientManager:
     def __init__(self, filename='clients.json'):
         self.filename = filename
         self.clients = self.load_clients()
-
-    def add_client(self, client):
-        self.clients.append(client)
+        
+    def add_client(self, client):        
+        self.clients.append(client)       
         self.save_clients()
+        
 
     def remove_client(self, client_name):
         self.clients = [c for c in self.clients if c['name'] != client_name]
@@ -38,3 +40,4 @@ class ClientManager:
             with open(self.filename, 'r') as file:
                 return json.load(file)
         return [] 
+  

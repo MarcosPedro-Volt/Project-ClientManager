@@ -1,17 +1,19 @@
 
-import sys
-from PySide6.QtWidgets import (QApplication, QWidget, QVBoxLayout, QHBoxLayout,
+from PySide6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout,
                                QLineEdit, QPushButton, QTableWidget, QTableWidgetItem,
                                QMessageBox)
 from PySide6.QtCore import Qt
 from client_manager import ClientManager
+from list_view_clients import *
 
 class ClientApp(QWidget):
     def __init__(self):
         super().__init__()
 
         self.manager = ClientManager()
+        
         self.init_ui()
+        
 
     def init_ui(self):
         self.setWindowTitle("Gestão de Clientes")
@@ -66,11 +68,9 @@ class ClientApp(QWidget):
 
         self.layout.addLayout(self.button_layout)
         
+        self.list_view = ListView()
         self.client_table = QTableWidget()
-       
         self.client_table.setColumnCount(8)
-        
-        
         
       
         self.client_table.setHorizontalHeaderLabels(
@@ -79,6 +79,7 @@ class ClientApp(QWidget):
              )
         
         self.layout.addWidget(self.client_table)
+        self.layout.addWidget(self.list_view)
 
         self.setLayout(self.layout)
         self.update_table()
@@ -109,6 +110,9 @@ class ClientApp(QWidget):
                 
                 self.manager.add_client(client)
                 self.update_table()
+                
+                self.list_view.update_list()
+                
                 self.clear_form()
 
             else:
@@ -124,6 +128,7 @@ class ClientApp(QWidget):
         if client_name:
             self.manager.remove_client(client_name)
             self.update_table()
+            self.list_view.update_list()
             self.clear_form()
         else:
             QMessageBox.warning(self, "Erro", "Nome é obrigatório")
@@ -171,6 +176,7 @@ class ClientApp(QWidget):
 
                 if self.manager.update_client(client_name, updated_client):
                     self.update_table()
+                    self.list_view.update_list()
                     self.clear_form()
                 else:
                     QMessageBox.warning(self, "Erro", "Cliente não encontrado")
@@ -181,13 +187,14 @@ class ClientApp(QWidget):
             QMessageBox.warning(self, "Erro", "Todos os campos são obrigatórios")
 
     def update_table(self):
+        
         self.client_table.setRowCount(len(self.manager.clients))
         for row, client in enumerate(self.manager.clients):
             
             obs_item = QTableWidgetItem(client['obs'])
             obs_item.setTextAlignment(Qt.AlignTop | Qt.AlignCenter)
             obs_item.font()
-
+            
             self.client_table.setItem(row, 0, QTableWidgetItem(client['name']))
             self.client_table.setItem(row, 1, QTableWidgetItem(client['telefone']))
             self.client_table.setItem(row, 2, QTableWidgetItem(client['cpf']))
@@ -198,10 +205,11 @@ class ClientApp(QWidget):
             self.client_table.setItem(row, 7, obs_item)
             
 
-            # self.client_table.setColumnWidth(7,540)
-            # self.client_table.setRowHeight(row,300)
-            
+            self.client_table.setColumnWidth(7,540)
+            self.client_table.setRowHeight(row,300)
 
+    
+           
     def clear_form(self):
         self.name_input.clear()
         self.telefone_input.clear()
