@@ -1,7 +1,7 @@
 
-from PySide6 import QtCore, QtGui, QtWidgets 
+from PySide6 import QtCore, QtGui, QtWidgets
 from client_manager import ClientManager
-
+from PySide6.QtCore import Qt
 
 
 class Ui_QListView(object):
@@ -42,11 +42,6 @@ class ListView(QtWidgets.QMainWindow, Ui_QListView):
         self.pushButton.setEnabled(False)
         self.model = QtGui.QStandardItemModel()
         self.update_list()
-
-        # name_ = self.manager.clients        
-        # for x in name_:          
-        #     model.appendRow(QtGui.QStandardItem(str(x['name'])))
-        # self.listView.setModel(model)
         
 
         self.listView.selectionModel().selectionChanged.connect(
@@ -60,10 +55,11 @@ class ListView(QtWidgets.QMainWindow, Ui_QListView):
         self.manager.clients = self.manager.load_clients()
         self.model.clear() 
         name_ = self.manager.clients
-       
+        
         for x in name_:
             self.model.appendRow(QtGui.QStandardItem(str(x['name'])))
         
+        self.model.sort(0, order=Qt.SortOrder.AscendingOrder)
         self.listView.setModel(self.model)
         
 

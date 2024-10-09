@@ -193,7 +193,7 @@ class ClientApp(QWidget):
             
             obs_item = QTableWidgetItem(client['obs'])
             obs_item.setTextAlignment(Qt.AlignTop | Qt.AlignCenter)
-            obs_item.font()
+            
             
             self.client_table.setItem(row, 0, QTableWidgetItem(client['name']))
             self.client_table.setItem(row, 1, QTableWidgetItem(client['telefone']))
@@ -206,7 +206,7 @@ class ClientApp(QWidget):
             
 
             self.client_table.setColumnWidth(7,540)
-            self.client_table.setRowHeight(row,300)
+            
 
     
            
