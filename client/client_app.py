@@ -228,3 +228,5 @@ class ClientApp(QWidget):
         else:
             return False
     
+    def haha(self):
+        return self
